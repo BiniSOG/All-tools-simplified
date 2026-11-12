@@ -76,7 +76,12 @@ class _SoundMeterState extends State<SoundMeterTool> {
 
   @override
   void dispose() {
-    _stop();
+    // Not _stop(): that refreshes the screen, which is not allowed while closing.
+    if (_t != null) {
+      _t?.cancel();
+      _t = null;
+      _ch.invokeMethod<void>('stop').catchError((_) {});
+    }
     super.dispose();
   }
 
