@@ -296,7 +296,7 @@ class QrTool extends StatefulWidget {
 }
 
 class _QrState extends State<QrTool> {
-  final _c = TextEditingController(text: 'Hello from Toolbox');
+  final _c = TextEditingController(text: 'Hello from Utility Hub');
 
   @override
   Widget build(BuildContext context) => ToolList(

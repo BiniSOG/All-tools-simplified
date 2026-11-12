@@ -1,4 +1,4 @@
-# Toolbox
+# Utility Hub
 
 An all-in-one utility app for **Android and iOS**, built with Flutter: 27 everyday tools plus 5 mini games in one small, fully offline app.
 
@@ -23,7 +23,7 @@ Things that bring people back:
 - **Personal bests** saved for every game.
 - **Favorites** (tap ☆ in any tool) and **Recently used** rows, plus instant **search**.
 - The PDF reader **remembers your page** in each document; the stopwatch keeps running while you use other tools.
-- Light and dark themes.
+- **Themes**: light, dark or follow-the-phone, plus any accent color you like (presets, sliders or a hex code) under the palette button. The default is the blue of the app icon.
 
 ## Run it
 
@@ -56,9 +56,12 @@ lib/
   core/logic.dart     pure calculation code (unit-tested)
   core/store.dart     on-device storage, high scores, streak
   core/ui.dart        shared widgets
+  core/theme.dart     accent color + light/dark mode
+  settings.dart       appearance screen
   tools/              calculators, time, text/documents, utilities
   games/              games; block_engine.dart holds the block-puzzle rules
 android/, ios/        native projects (flashlight is a few lines of Kotlin/Swift)
+assets/icon_source.jpg  app icon artwork; run `python3 tool/make_icons.py` to regenerate all icon sizes
 test/                 logic tests + a test that opens every tool on a 320×480 screen
 ```
 

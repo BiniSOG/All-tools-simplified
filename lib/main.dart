@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'core/store.dart';
+import 'core/theme.dart';
 import 'core/ui.dart';
 import 'registry.dart';
+import 'settings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Store.init();
+  AppTheme.instance.load();
   runApp(ToolboxApp(streakExtended: Streak.touch()));
 }
 
@@ -19,36 +22,22 @@ class ToolboxApp extends StatefulWidget {
 }
 
 class _ToolboxAppState extends State<ToolboxApp> {
-  // null = follow the phone's setting.
-  bool? _dark = Store.str('theme').isEmpty ? null : Store.str('theme') == 'dark';
-
-  ThemeData _theme(Brightness b) => ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF3F51B5), brightness: b),
-    useMaterial3: true,
-    // The simple fade transition is cheaper than the default zoom on slow phones.
-    pageTransitionsTheme: const PageTransitionsTheme(builders: {TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(), TargetPlatform.iOS: CupertinoPageTransitionsBuilder()}),
-  );
-
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'Toolbox',
-    debugShowCheckedModeBanner: false,
-    theme: _theme(Brightness.light),
-    darkTheme: _theme(Brightness.dark),
-    themeMode: _dark == null ? ThemeMode.system : (_dark! ? ThemeMode.dark : ThemeMode.light),
-    home: HomePage(
-      streakExtended: widget.streakExtended,
-      onToggleTheme: (nowDark) => setState(() {
-        _dark = !nowDark;
-        Store.setStr('theme', _dark! ? 'dark' : 'light');
-      }),
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: AppTheme.instance,
+    builder: (_, _) => MaterialApp(
+      title: 'Utility Hub',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.instance.build(Brightness.light),
+      darkTheme: AppTheme.instance.build(Brightness.dark),
+      themeMode: AppTheme.instance.mode,
+      home: HomePage(streakExtended: widget.streakExtended),
     ),
   );
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.onToggleTheme, this.streakExtended = false});
-  final void Function(bool currentlyDark) onToggleTheme;
+  const HomePage({super.key, this.streakExtended = false});
   final bool streakExtended;
 
   @override
@@ -108,6 +97,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
     final q = _search.text.trim().toLowerCase();
     final slivers = <Widget>[];
 
@@ -124,15 +114,15 @@ class _HomePageState extends State<HomePage> {
         SliverToBoxAdapter(
           child: Card(
             margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-            color: const Color(0xFF26A269),
+            color: cs.secondaryContainer,
             child: ListTile(
-              leading: Icon(pick.icon, color: Colors.white, size: 32),
+              leading: Icon(pick.icon, color: cs.primary, size: 32),
               title: Text(
                 'Game of the day: ${pick.name}',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                style: TextStyle(color: cs.onSecondaryContainer, fontWeight: FontWeight.w600),
               ),
-              subtitle: Text(best == null ? 'You have not played this one yet. Set a first score!' : 'Your best: $best. Can you beat it today?', style: const TextStyle(color: Colors.white)),
-              trailing: const Icon(Icons.play_arrow, color: Colors.white),
+              subtitle: Text(best == null ? 'You have not played this one yet. Set a first score!' : 'Your best: $best. Can you beat it today?', style: TextStyle(color: cs.onSecondaryContainer)),
+              trailing: Icon(Icons.play_arrow, color: cs.primary),
               onTap: () => _open(pick),
             ),
           ),
@@ -162,14 +152,23 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Toolbox'),
+        title: const Text('Utility Hub'),
         actions: [
           Chip(
             avatar: const Icon(Icons.local_fire_department, color: Colors.deepOrange, size: 18),
             label: Text('${Streak.days} ${Streak.days == 1 ? 'day' : 'days'}'),
             visualDensity: VisualDensity.compact,
           ),
-          IconButton(icon: Icon(dark ? Icons.light_mode : Icons.dark_mode), tooltip: dark ? 'Light mode' : 'Dark mode', onPressed: () => widget.onToggleTheme(dark)),
+          IconButton(
+            icon: Icon(dark ? Icons.light_mode : Icons.dark_mode),
+            tooltip: dark ? 'Light mode' : 'Dark mode',
+            onPressed: () => AppTheme.instance.setMode(dark ? ThemeMode.light : ThemeMode.dark),
+          ),
+          IconButton(
+            icon: const Icon(Icons.palette_outlined),
+            tooltip: 'Appearance',
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const SettingsPage())),
+          ),
         ],
       ),
       body: SafeArea(

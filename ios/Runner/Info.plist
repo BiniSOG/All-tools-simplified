@@ -7,7 +7,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>Motion sensors are used by the Compass, Bubble Level and Metal Detector tools.</string>
 	<key>CFBundleDisplayName</key>
-	<string>Toolbox</string>
+	<string>Utility Hub</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
