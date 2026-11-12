@@ -49,8 +49,7 @@ dependencies:
   audioplayers_darwin: 6.2.0
   flutter_tts: 4.2.0
   speech_to_text: 7.0.0
-  record: 5.0.5
-  record_android: 1.1.0
+  image: ^4.5.4
 
 dev_dependencies:
   flutter_test:
