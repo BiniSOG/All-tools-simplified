@@ -4,6 +4,16 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used by the Magnifier, Color Detector, Document Scanner, Heart Rate, Motion Camera and IP Camera tools.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The microphone is used by the Sound Meter and Speech to Text tools.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Speech recognition turns what you say into text in the Speech to Text tool.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is used by the Speedometer and Altitude tools to measure speed, distance and height.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Local network access lets File Transfer and IP Camera share with other devices on your Wi-Fi.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Motion sensors are used by the Compass, Bubble Level and Metal Detector tools.</string>
 	<key>CFBundleDisplayName</key>
